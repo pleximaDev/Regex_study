@@ -361,8 +361,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 2
-#define YY_END_OF_BUFFER 3
+#define YY_NUM_RULES 3
+#define YY_END_OF_BUFFER 4
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -370,23 +370,24 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[11] =
+static yyconst flex_int16_t yy_accept[12] =
     {   0,
-        0,    0,    3,    2,    1,    2,    1,    1,    0,    0
+        0,    0,    4,    2,    2,    3,    0,    0,    1,    0,
+        0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
     {   0,
+        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    2,    1,    1,    1,    4,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    5,    6,
+        5,    6,    5,    6,    5,    6,    5,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    2,    3,    4,
-        3,    4,    3,    4,    3,    4,    3,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    7,    1,    1,    1,    1,    1,    1,
 
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -407,33 +408,35 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[5] =
+static yyconst flex_int32_t yy_meta[8] =
     {   0,
-        1,    2,    3,    2
+        1,    1,    1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[13] =
+static yyconst flex_int16_t yy_base[12] =
     {   0,
-        0,    0,    7,    8,    8,    0,    0,    0,    0,    8,
-        4,    2
+        0,    0,   15,   16,    3,    0,    8,    8,   16,    0,
+       16
     } ;
 
-static yyconst flex_int16_t yy_def[13] =
+static yyconst flex_int16_t yy_def[12] =
     {   0,
-       10,    1,   10,   10,   10,   11,   12,   12,   11,    0,
-       10,   10
+       11,    1,   11,   11,   11,    5,   11,   11,   11,    7,
+        0
     } ;
 
-static yyconst flex_int16_t yy_nxt[13] =
+static yyconst flex_int16_t yy_nxt[24] =
     {   0,
-        4,    5,    6,    7,    9,    8,   10,    3,   10,   10,
-       10,   10
+        4,    5,    6,    4,    4,    4,    5,    7,    8,    9,
+        9,    9,   10,    8,   11,    3,   11,   11,   11,   11,
+       11,   11,   11
     } ;
 
-static yyconst flex_int16_t yy_chk[13] =
+static yyconst flex_int16_t yy_chk[24] =
     {   0,
-        1,    1,    1,    1,   12,   11,    3,   10,   10,   10,
-       10,   10
+        1,    1,    1,    1,    1,    1,    1,    5,    5,    7,
+        7,    7,    8,    7,    3,   11,   11,   11,   11,   11,
+       11,   11,   11
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -454,11 +457,23 @@ char *yytext;
 #line 6 "natnum.l"
 #include <stdio.h>
 #include <stdlib.h>
-int num_counter = 0;
+#define MAX_TOKENS 32
 
+int num_counter = 0;
+int num_array[MAX_TOKENS];
+
+//word boundary vers
 //\b(([2468]?([13579][02468])+)|[02468])\b {num_counter++; printf("%s\n",yytext); printf("Got here...\n");}
 
-#line 462 "temp.yy.c"
+// (([2468]?([13579][02468])+)|[02468]) {num_counter++; printf("%s\n",yytext); printf("Got here...\n");}
+
+//grouping vers
+//(^|\s)((?:[2468]?(?:[13579][02468])+)|[02468])(?=\s)
+
+// using $2
+// (^|\s)((?:[2468]?(?:[13579][02468])+)|[02468])(?=\s) {num_counter++; printf("found 2nd group: %s\n", $2);/* printf("%s\n",yytext);*/}
+
+#line 477 "temp.yy.c"
 
 #define INITIAL 0
 
@@ -640,10 +655,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 15 "natnum.l"
+#line 27 "natnum.l"
 
 
-#line 647 "temp.yy.c"
+#line 662 "temp.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -696,13 +711,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 11 )
+				if ( yy_current_state >= 12 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 8 );
+		while ( yy_base[yy_current_state] != 16 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -727,16 +742,22 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
+/* rule 1 can match eol */
 YY_RULE_SETUP
-#line 17 "natnum.l"
-{num_counter++; printf("%s\n",yytext); printf("Got here...\n");}
+#line 29 "natnum.l"
+{*(num_array + num_counter) = atoi(yytext); num_counter++; /*printf("%s\n",yytext);*/}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "natnum.l"
+#line 31 "natnum.l"
+;
+	YY_BREAK
+case 3:
+YY_RULE_SETUP
+#line 33 "natnum.l"
 ECHO;
 	YY_BREAK
-#line 740 "temp.yy.c"
+#line 761 "temp.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1028,7 +1049,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 11 )
+			if ( yy_current_state >= 12 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1056,11 +1077,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 11 )
+		if ( yy_current_state >= 12 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 10);
+	yy_is_jam = (yy_current_state == 11);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1733,14 +1754,26 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 19 "natnum.l"
+#line 33 "natnum.l"
 
 
 int main(void)
 {
 	yylex();
 	//printf("%d\n", atoi(yytext));
-	printf("Total count of lexems being found: %d\n", num_counter);
+	printf("List of tokens:\n");
+	if(num_counter <= MAX_TOKENS)
+	{
+		for(int i = 0; i < num_counter; i++)
+		{
+			printf("%d. %d\n", i, *(num_array + i));
+		}
+	}
+	else
+	{
+		printf("Number of tokens is more than output array limits...\n");
+	}
+	printf("Total count of tokens being found: %d\n", num_counter);
 	return 0;
 }
 
